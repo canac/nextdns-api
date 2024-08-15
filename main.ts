@@ -37,9 +37,9 @@ serve(async (req) => {
   }
 
   const { profileId, command } = matches.pathname.groups;
-  if (command === "enable-all") {
+  if (profileId && command === "enable-all") {
     await setAllRulesActive(nextDnsApiKey, profileId, true);
-  } else if (command === "disable-all") {
+  } else if (profileId && command === "disable-all") {
     await setAllRulesActive(nextDnsApiKey, profileId, false);
   } else {
     return new Response("Not Found", { status: 404 });

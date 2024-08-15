@@ -1,4 +1,3 @@
-import { serve } from "https://deno.land/std@0.154.0/http/server.ts";
 import { memoize } from "https://deno.land/x/froebel@v0.21.3/mod.ts";
 import { setAllRulesActive } from "./denylist.ts";
 
@@ -17,7 +16,7 @@ const getEnvAll = memoize(() => ({
   nextDnsApiKey: getEnv("NEXTDNS_API_KEY"),
 }));
 
-serve(async (req) => {
+Deno.serve({ port: Number.isNaN(port) ? undefined : port }, async (req) => {
   const { apiKey, nextDnsApiKey } = getEnvAll();
 
   if (req.headers.get("Authorization") !== `Bearer ${apiKey}`) {
@@ -46,4 +45,4 @@ serve(async (req) => {
   }
 
   return new Response("Success");
-}, { port: Number.isNaN(port) ? undefined : port });
+});

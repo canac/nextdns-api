@@ -16,8 +16,7 @@ async function getRules(apiKey: string, profileId: string): Promise<Rule[]> {
       },
     },
   );
-  const body = await denylistSchema.parseAsync(await res.json());
-  return body.data;
+  return denylistSchema.parse(await res.json()).data;
 }
 
 async function setRuleActive(

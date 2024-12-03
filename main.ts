@@ -1,25 +1,10 @@
-import { memoize } from "https://deno.land/x/froebel@v0.21.3/mod.ts";
 import { setAllRulesActive } from "./denylist.ts";
 
 const port = parseInt(Deno.env.get("PORT") ?? "");
 
-function getEnv(name: string): string {
-  const value = Deno.env.get(name);
-  if (!value) {
-    throw new Error(`${name} environment variable isn't set`);
-  }
-  return value;
-}
-
-const getEnvAll = memoize(() => ({
-  apiKey: getEnv("API_KEY"),
-  nextDnsApiKey: getEnv("NEXTDNS_API_KEY"),
-}));
-
-Deno.serve({ port: Number.isNaN(port) ? undefined : port }, async (req) => {
-  const { apiKey, nextDnsApiKey } = getEnvAll();
-
-  if (req.headers.get("Authorization") !== `Bearer ${apiKey}`) {
+Deno.serve({ port: port || undefined }, async (req) => {
+  const apiKey = req.headers.get("X-Api-Key");
+  if (!apiKey) {
     return new Response("Unauthorized", { status: 401 });
   }
 
@@ -36,12 +21,20 @@ Deno.serve({ port: Number.isNaN(port) ? undefined : port }, async (req) => {
   }
 
   const { profileId, command } = matches.pathname.groups;
-  if (profileId && command === "enable-all") {
-    await setAllRulesActive(nextDnsApiKey, profileId, true);
-  } else if (profileId && command === "disable-all") {
-    await setAllRulesActive(nextDnsApiKey, profileId, false);
-  } else {
-    return new Response("Not Found", { status: 404 });
+  try {
+    if (profileId && command === "enable-all") {
+      await setAllRulesActive(apiKey, profileId, true);
+    } else if (profileId && command === "disable-all") {
+      await setAllRulesActive(apiKey, profileId, false);
+    } else {
+      return new Response("Not Found", { status: 404 });
+    }
+  } catch (err) {
+    // Handle error responses thrown by setAllRulesActive
+    if (err instanceof Response) {
+      return err;
+    }
+    throw err;
   }
 
   return new Response("Success");

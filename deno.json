@@ -1,6 +1,6 @@
 {
   "tasks": {
-    "run": "deno run --allow-env=API_KEY,NEXTDNS_API_KEY,PORT --allow-net=0.0.0.0,api.nextdns.io main.ts",
-    "run-watch": "deno run --allow-env=API_KEY,NEXTDNS_API_KEY,PORT --allow-net=0.0.0.0,api.nextdns.io --watch main.ts"
+    "run": "deno run --allow-env=PORT --allow-net=0.0.0.0,api.nextdns.io main.ts",
+    "run-watch": "deno run --allow-env=PORT --allow-net=0.0.0.0,api.nextdns.io --watch main.ts"
   }
 }

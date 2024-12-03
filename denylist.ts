@@ -37,7 +37,9 @@ async function setRuleActive(
       body: JSON.stringify({ active }),
     },
   );
-  await res.text();
+  if (!res.ok) {
+    throw res;
+  }
 }
 
 export async function setAllRulesActive(

@@ -1,4 +1,4 @@
-import { setAllRulesActive } from "./denylist.ts";
+import { setAllRulesActive, setExceptionActive } from "./denylist.ts";
 
 const port = parseInt(Deno.env.get("PORT") ?? "");
 
@@ -12,20 +12,27 @@ Deno.serve({ port: port || undefined }, async (req) => {
     return new Response("Method Not Found", { status: 405 });
   }
 
-  const pattern = new URLPattern({
+  const pattern1 = new URLPattern({
     pathname: "/:profileId/denylist/:command",
   });
-  const matches = pattern.exec(req.url);
+  const pattern2 = new URLPattern({
+    pathname: "/:profileId/allowlist/:command/:site",
+  });
+  const matches = pattern1.exec(req.url) ?? pattern2.exec(req.url);
   if (!matches) {
     return new Response("Not Found", { status: 404 });
   }
 
-  const { profileId, command } = matches.pathname.groups;
+  const { profileId, command, site } = matches.pathname.groups;
   try {
     if (profileId && command === "enable-all") {
       await setAllRulesActive(apiKey, profileId, true);
     } else if (profileId && command === "disable-all") {
       await setAllRulesActive(apiKey, profileId, false);
+    } else if (profileId && site && command === "enable") {
+      await setExceptionActive(apiKey, profileId, site, true);
+    } else if (profileId && site && command === "disable") {
+      await setExceptionActive(apiKey, profileId, site, false);
     } else {
       return new Response("Not Found", { status: 404 });
     }

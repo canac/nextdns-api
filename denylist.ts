@@ -53,3 +53,25 @@ export async function setAllRulesActive(
     ),
   );
 }
+
+export async function setExceptionActive(
+  apiKey: string,
+  profileId: string,
+  site: string,
+  active: boolean,
+): Promise<void> {
+  const res = await fetch(
+    `https://api.nextdns.io/profiles/${profileId}/allowlist/${site}`,
+    {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+        "X-Api-Key": apiKey,
+      },
+      body: JSON.stringify({ active }),
+    },
+  );
+  if (!res.ok) {
+    throw res;
+  }
+}

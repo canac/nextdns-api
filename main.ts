@@ -1,8 +1,6 @@
 import { setAllRulesActive, setExceptionActive } from "./denylist.ts";
 
-const port = parseInt(Deno.env.get("PORT") ?? "");
-
-Deno.serve({ port: port || undefined }, async (req) => {
+async function handle(req: Request): Promise<Response> {
   const apiKey = req.headers.get("X-Api-Key");
   if (!apiKey) {
     return new Response("Unauthorized", { status: 401 });
@@ -45,4 +43,6 @@ Deno.serve({ port: port || undefined }, async (req) => {
   }
 
   return new Response("Success");
-});
+}
+
+export default { fetch: handle } satisfies ExportedHandler;

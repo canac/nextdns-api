@@ -1,0 +1,28 @@
+{
+  "name": "nextdns-api",
+  "private": true,
+  "description": "Server for interacting with the NextDNS API",
+  "type": "module",
+  "scripts": {
+    "dev": "wrangler dev ${PORT:+--port $PORT}",
+    "deploy": "wrangler deploy",
+    "types": "wrangler types",
+    "fmt": "oxfmt --write .",
+    "fmt:check": "oxfmt --check .",
+    "lint": "oxlint",
+    "typecheck": "tsc --noEmit",
+    "types:check": "wrangler types --check"
+  },
+  "dependencies": {
+    "zod": "^4.6.7"
+  },
+  "devDependencies": {
+    "@canac/oxc-config": "^0.1.0",
+    "oxfmt": "^0.72.0",
+    "oxlint": "^1.87.0",
+    "oxlint-tsgolint": "^7.0.2004",
+    "typescript": "^7.0.2",
+    "wrangler": "^4.149.0"
+  },
+  "packageManager": "pnpm@12.11.2"
+}

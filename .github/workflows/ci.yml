@@ -1,0 +1,28 @@
+name: CI
+
+on: push
+
+jobs:
+  check:
+    name: ${{ matrix.name }}
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - name: Format
+            run: pnpm fmt:check
+          - name: Lint
+            run: pnpm lint
+          - name: Type check
+            run: pnpm typecheck
+          - name: Worker types
+            run: pnpm types:check
+    steps:
+      - uses: actions/checkout@v7
+      - uses: pnpm/action-setup@v6
+      - uses: actions/setup-node@v7
+        with:
+          node-version-file: .node-version
+      - run: pnpm install --frozen-lockfile
+      - run: ${{ matrix.run }}

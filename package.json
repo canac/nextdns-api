@@ -23,5 +23,11 @@
     "typescript": "^7.0.2",
     "wrangler": "^4.149.0"
   },
-  "packageManager": "pnpm@11.28.5"
+  "devEngines": {
+    "packageManager": {
+      "name": "pnpm",
+      "version": "12.11.2",
+      "onFail": "download"
+    }
+  }
 }

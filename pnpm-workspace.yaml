@@ -2,4 +2,4 @@ allowBuilds:
   esbuild: true
   workerd: true
 minimumReleaseAgeExclude:
-  - "@canac/oxc-config"
+  - "@canac/*"
